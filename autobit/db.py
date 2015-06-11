@@ -85,12 +85,7 @@ class Release(Base):
     def normalize(release_name: str) -> str:
         return release_name.replace(" ", ".").lower()
 
-    def guess(self):
-        attrs = guessit.guess_file_info(self.name, options={'name_only': True})
-        for k in ['releaseGroup', 'format', 'type']:
-            if k not in attrs:
-                return False
-        return attrs
+
 
 
 def add_release(session: Session, release: Release) -> bool:

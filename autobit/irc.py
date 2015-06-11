@@ -4,18 +4,9 @@
 """
 from __future__ import unicode_literals, absolute_import
 import abc
-from enum import IntEnum
 from guessit import guess_file_info
 from autobit.db import Release
 from autobit import db
-
-
-class MediaClass(IntEnum):
-    UNSUPPORTED = 0
-    TV_SD = 1
-    TV_HD = 2
-    MOVIE_SD = 3
-    MOVIE_HD = 4
 
 
 class ParsedLineInfo(object):

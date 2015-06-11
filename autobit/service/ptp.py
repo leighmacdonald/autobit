@@ -14,9 +14,9 @@
 from __future__ import unicode_literals, absolute_import
 import re
 import requests
-from autobit.irc import IRCParser, MediaClass
+from autobit.irc import IRCParser
 from autobit.db import Release
-from uploader import Uploader
+from autobit.uploader import Uploader
 
 
 class PTPParser(IRCParser):

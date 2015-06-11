@@ -6,7 +6,8 @@ http://www.torrentleech.org/download/615195/Angles.of.Darkness.2015.480p.WEBRiP.
 """
 from __future__ import unicode_literals, absolute_import
 import re
-from autobit.parser import IRCParser, MediaClass
+from autobit.classification import MediaClass
+from autobit.irc import IRCParser
 from autobit.db import Release
 
 

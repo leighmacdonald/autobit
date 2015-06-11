@@ -5,11 +5,11 @@
 from __future__ import unicode_literals, absolute_import
 
 import unittest
-from autobit import parser
+from autobit import irc
 from autobit import config
-from autobit.parser.tl import TLParser
-import db
-from parser.ptp import PTPParser
+from autobit import db
+from autobit.service.tl import TLParser
+from autobit.service.ptp import PTPParser
 
 
 class ParserTest(unittest.TestCase):
@@ -21,7 +21,7 @@ class ParserTest(unittest.TestCase):
               "Name:'Angles of Darkness 2015 480p WEBRiP SViD AC3-LEGi0N' " \
               "uploaded by 'GiGGLES' -  http://www.torrentleech.org/torrent/615195"
         tl_parser = TLParser()
-        result = parser.process_line(tl_parser, msg)
+        result = irc.process_line(tl_parser, msg)
         attr = result.guess()
         self.assertEqual({
             'screenSize': '480p',

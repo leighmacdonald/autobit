@@ -2,23 +2,44 @@
 """
 
 """
-import json
 import logging
-from os.path import dirname, join
-from autobit import parser
-
-config = json.load(open(join(dirname(__file__), "config.json")))
+from os.path import dirname, exists
+from flask.config import Config
+import os
+from autobit.service.tl import TLParser
 
 logger = logging.getLogger(__name__)
+
+
+def load_config():
+    cfg = Config(dirname(dirname(__file__)))
+    cfg.from_object("autobit.settings")
+    if "AUTOBIT_SETTINGS" in os.environ:
+        cfg.from_envvar("AUTOBIT_SETTINGS")
+
+    if not exists(cfg['WATCH_DIR']):
+        logger.info("Creating watch dir: {}".format(cfg['WATCH_DIR']))
+        os.makedirs(cfg['WATCH_DIR'])
+
+    return cfg
+
+config = load_config()
+
+
 
 try:
     import znc
 except ImportError:
-    logger.error("ZNC Module not available")
+    logger.warning("Python ZNC Module not available")
     znc = None
 else:
     # Only load the module if we are using a real ZNC python interpreter with the znc .so module loaded
+    # If this is not like this it makes testing a pain.
+
     class autobit(znc.Module):
+        """
+        This is the ZNC module that will parse incoming IRC messages
+        """
         description = "Bittorrent IRC Auto Downloader"
         module_types = [znc.CModInfo.NetworkModule, znc.CModInfo.UserModule]
         args = []
@@ -42,8 +63,6 @@ else:
 
         def OnLoad(self, sArgs, sMessage):
             if sArgs == "tl":
-                from autobit.parser.tl import TLParser
-
                 self.parser = TLParser()
             if self.parser:
                 self.active = True
