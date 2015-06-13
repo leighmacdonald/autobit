@@ -89,6 +89,9 @@ class MediaClass(IntEnum):
     MOVIE_HD = 4
 
 
+TV_CLASSES = [MediaClass.TV_SD, MediaClass.TV_HD]
+MOVIE_CLASSES = [MediaClass.MOVIE_HD, MediaClass.MOVIE_SD]
+
 class MediaType(IntEnum):
     UNKNOWN = 0
     EPISODE = 1

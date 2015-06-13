@@ -14,22 +14,28 @@
 from __future__ import unicode_literals, absolute_import
 import re
 import requests
+from autobit import config
 from autobit.irc import IRCParser
 from autobit.db import Release
 from autobit.uploader import Uploader
+from autobit.classification import MediaClass
 
 
 class PTPParser(IRCParser):
     name = "ptp"
     source_nick = "Hummingbird".lower()
     source_chan = "#ptp-announce-ssl".lower()
+    _passkey = ""
 
     rx = re.compile(r"^(?P<name>.+?)\s-\shttps://.+?torrentid=(?P<id>\d+)")
 
-    def __init__(self, passkey):
-        self._passkey = passkey
+    def __init__(self):
+        self.reconfigure()
         self._www_session = requests.Session()
         self._logged_in = False
+
+    def reconfigure(self):
+        self._passkey = config['PTP_PASSKEY']
 
     def parse_line(self, message: str) -> Release:
         m = self.rx.match(message)
@@ -76,5 +82,8 @@ class PTPParser(IRCParser):
 
 
 class PTPUploader(Uploader):
-    def upload(self):
+    def upload(self, release_name, torrent_file) -> bool:
+        pass
+
+    def configure(self, config):
         pass

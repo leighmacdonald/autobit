@@ -5,6 +5,19 @@
 from __future__ import unicode_literals, absolute_import
 import requests
 from autobit.uploader import Uploader
+from autobit.irc import IRCParser
+from classification import MediaType
+
+
+class TOTVParser(IRCParser):
+    def parse_media_type(self, media_class: str) -> int:
+        return MediaType.EPISODE
+
+    def parse_release_name(self, media_class: int, release_name: str) -> Release:
+        pass
+
+    def parse_line(self, message: str) -> Release:
+        pass
 
 
 class ToTVUploader(Uploader):

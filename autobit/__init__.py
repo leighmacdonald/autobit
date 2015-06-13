@@ -25,8 +25,6 @@ def load_config():
 
 config = load_config()
 
-
-
 try:
     import znc
 except ImportError:
@@ -53,7 +51,7 @@ else:
         def OnChanMsg(self, nick, channel, message):
             self.debug("OnChanMsg: {}".format(message.s))
             if self.active and self.parser.verify_source(channel.GetName(), nick.GetNick()):
-                parsed_line = parser.process_line(self.parser, message.s)
+                parsed_line = irc.process_line(self.parser, message.s)
                 if not parsed_line:
                     return znc.CONTINUE
                 self.module_msg(parsed_line)

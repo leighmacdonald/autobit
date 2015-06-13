@@ -27,20 +27,11 @@ class IRCParser(object):
         pass
 
     @abc.abstractmethod
-    def parse_release_name(self, media_class: int, release_name: str) -> Release:
-        pass
-
-    @abc.abstractmethod
     def parse_line(self, message: str) -> Release:
         pass
 
-    @abc.abstractmethod
     def verify_source(self, channel: str, nick: str) -> bool:
-        pass
-
-
-def parse_release_name(release_name: str) -> Release:
-    guess = guess_file_info(release_name)
+        return self.source_chan == channel.lower() and self.source_nick == nick.lower()
 
 
 def process_line(parser: IRCParser, msg: str) -> Release:
