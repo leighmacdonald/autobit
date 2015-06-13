@@ -12,6 +12,8 @@ from __future__ import unicode_literals, absolute_import
 from os.path import expanduser
 
 # Application paths
+
+# Where the torrent client will pick up releases
 WATCH_DIR = expanduser("~/.config/autobit/watch")
 
 # Tracker configurations

@@ -4,7 +4,10 @@
 """
 from __future__ import unicode_literals, absolute_import
 from subprocess import check_call, CalledProcessError
+from os.path import isfile, isdir, join
 import logging
+import glob
+import rarfile
 
 logger = logging.getLogger(__name__)
 
@@ -68,3 +71,41 @@ def find_piece_size(total_size):
         return 16384
     else:
         raise ValueError("Total size is unreasonably large")
+
+
+def extract_release(path):
+    if isfile(path):
+        return path
+    elif isdir(path):
+        target = glob.glob(join(path, '*part01.rar'))
+        if not target:
+            target = glob.glob(join(path, '*part1.rar'))
+            if not target:
+                target = glob.glob(join(path, '*.rar'))
+        if not target:
+            raise FileNotFoundError("Could not find suitable target to extract: {}".format(path))
+    else:
+        raise ValueError("Invalid path, unsupported file type")
+
+
+def extract_rar(path, target_dir):
+    """ Extract *only* the largest file contained within a rar archive. All other
+    files are ignored.
+
+    :param path:
+    :type path:
+    :param target_dir:
+    :type target_dir:
+    :return:
+    :rtype:
+    """
+    rar = rarfile.RarFile(path, errors="strict")
+    try:
+        largest = None
+        for rar_file in rar.infolist():
+            if not largest or rar_file.file_size > largest.file_size:
+                largest = rar_file
+    except IndexError:
+        raise FileNotFoundError("Rar file contains no files")
+    else:
+        rar.extract(largest, target_dir)

@@ -6,7 +6,8 @@ from __future__ import unicode_literals, absolute_import
 import requests
 from autobit.uploader import Uploader
 from autobit.irc import IRCParser
-from classification import MediaType
+from autobit.classification import MediaType
+from autobit.db import Release
 
 
 class TOTVParser(IRCParser):

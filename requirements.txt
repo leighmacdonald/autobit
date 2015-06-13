@@ -1,3 +1,4 @@
 guessit
 sqlalchemy
 flask
+rarfile

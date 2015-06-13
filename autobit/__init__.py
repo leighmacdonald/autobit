@@ -25,6 +25,8 @@ def load_config():
 
 config = load_config()
 
+# This is here due to the way znc loads modules.
+# TODO confirm if this is actually true
 try:
     import znc
 except ImportError:
