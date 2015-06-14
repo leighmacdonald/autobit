@@ -35,3 +35,10 @@ SCC_ENABLE_UPLOAD = False
 SCC_ENABLE_DOWNLOAD = False
 SCC_USER = ""
 SCC_PASS = ""
+
+TL_SOURCE_NICK = "_AnnounceBot_".lower()
+TL_SOURCE_CHAN = "#tlannounces".lower()
+TL_APIKEY = ""
+
+PTP_PASSKEY = ""
+PTP_AUTHKEY = ""

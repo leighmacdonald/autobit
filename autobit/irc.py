@@ -4,9 +4,9 @@
 """
 from __future__ import unicode_literals, absolute_import
 import abc
-from guessit import guess_file_info
-from autobit.db import Release
 from autobit import db
+from autobit.db import Release
+from autobit.tracker import Tracker
 
 
 class ParsedLineInfo(object):
@@ -34,7 +34,7 @@ class IRCParser(object):
         return self.source_chan == channel.lower() and self.source_nick == nick.lower()
 
 
-def process_line(parser: IRCParser, msg: str) -> Release:
+def process_line(parser: Tracker, msg: str) -> Release:
     release = parser.parse_line(msg)
     if release:
         session = db.Session()

@@ -15,27 +15,31 @@ from __future__ import unicode_literals, absolute_import
 import re
 import requests
 from autobit import config
-from autobit.irc import IRCParser
 from autobit.db import Release
-from autobit.uploader import Uploader
+from autobit.tracker import Tracker
 from autobit.classification import MediaClass
 
 
-class PTPParser(IRCParser):
+class PassThePopcorn(Tracker):
+
     name = "ptp"
     source_nick = "Hummingbird".lower()
     source_chan = "#ptp-announce-ssl".lower()
     _passkey = ""
+    _authkey = ""
 
     rx = re.compile(r"^(?P<name>.+?)\s-\shttps://.+?torrentid=(?P<id>\d+)")
 
     def __init__(self):
+        super().__init__()
         self.reconfigure()
         self._www_session = requests.Session()
         self._logged_in = False
+        self._enabled = False
 
     def reconfigure(self):
         self._passkey = config['PTP_PASSKEY']
+        self._authkey = config['PTP_AUTHKEY']
 
     def parse_line(self, message: str) -> Release:
         m = self.rx.match(message)
@@ -44,10 +48,7 @@ class PTPParser(IRCParser):
             media_type = self.parse_media_type(g['cat'])
             if media_type == MediaClass.UNSUPPORTED:
                 return None
-            torrent_file = self.fetch_file()
-            if not torrent_file:
-                return None
-            release = Release(g['name'], media_type, self.name, torrent_file)
+            release = Release(g['name'], media_type, self.name)
             return release
         return None
 
@@ -58,32 +59,24 @@ class PTPParser(IRCParser):
             return MediaClass.MOVIE_SD
         return MediaClass.UNSUPPORTED
 
-    def parse_release_name(self, media_class: MediaClass, release_name: str) -> Release:
-        pass
-
     def verify_source(self, channel: str, nick: str) -> bool:
         return self.source_chan == channel.lower() and self.source_nick == nick.lower()
 
-    def login(self) -> bool:
+    def _login(self) -> bool:
         pass
 
-    def make_torrent_url(self, torrent_id):
-        return "http://passthepopcorn.me/torrents.php?action=download&torrent_pass={}&id={}".format(
-            self._passkey, torrent_id
+    def _make_torrent_url(self, torrent_id):
+        return "http://passthepopcorn.me/torrents.php?action=download&torrent_pass={}&id={}&authkey={}".format(
+            self._passkey, torrent_id, config['PTP_AUTHKEY']
         )
 
-    def fetch_file(self, torrent_id: int) -> bytes:
-        if not self._logged_in and not self.login():
-            return None
-        r = self._www_session.get(self.make_torrent_url(torrent_id))
-        if r.ok:
-            return r.content
-        return False
-
-
-class PTPUploader(Uploader):
     def upload(self, release_name, torrent_file) -> bool:
         pass
 
-    def configure(self, config):
-        pass
+    def download(self, release: Release) -> bytes:
+        if not self._logged_in and not self.login():
+            return None
+        r = self._www_session.get(self._make_torrent_url(release.torrent_id))
+        if r.ok:
+            return r.content
+        return False

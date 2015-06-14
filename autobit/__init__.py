@@ -6,7 +6,7 @@ import logging
 from os.path import dirname, exists
 from flask.config import Config
 import os
-from autobit.service.tl import TLParser
+
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +63,7 @@ else:
 
         def OnLoad(self, sArgs, sMessage):
             if sArgs == "tl":
+                from autobit.service.tl import TLParser
                 self.parser = TLParser()
             if self.parser:
                 self.active = True
