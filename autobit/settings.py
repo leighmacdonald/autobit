@@ -19,8 +19,8 @@ WATCH_DIR = expanduser("~/.config/autobit/watch")
 # Tracker configurations
 BTN_ENABLE_UPLOAD = False
 BTN_ENABLE_DOWNLOAD = False
-BTN_USER = ""
-BTN_PASS = ""
+BTN_AUTHKEY = ""
+BTN_PASSKEY = ""
 
 TOTV_ENABLE_UPLOAD = False
 TOTV_ENABLE_DOWNLOAD = False

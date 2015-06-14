@@ -18,6 +18,7 @@ class Tracker(object):
         self.logger = logging.getLogger("tracker.{}".format(self.name))
         self._source_chan = None
         self._source_nick = None
+        self.reconfigure()
 
     @abc.abstractmethod
     def reconfigure(self):
