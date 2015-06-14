@@ -10,6 +10,10 @@ from autobit.db import Release
 
 
 class Tracker(object):
+    """ Base class defining a tracker module that can be sub classed to provide customized
+    functionality specific to each tracker being targeted.
+
+    """
     __metaclass__ = abc.ABCMeta
 
     name = "unknown"
@@ -22,14 +26,30 @@ class Tracker(object):
 
     @abc.abstractmethod
     def reconfigure(self):
+        """ The tracker configuration should be reloaded when this method is called. """
         pass
 
     @abc.abstractmethod
     def parse_line(self, message: str) -> Release:
+        """ Parses a message from IRC for valid release details to parse and potentially download.
+
+        :param message: Raw IRC message to parse.
+        :type message: str
+        :return: Configured release instance in detached session state.
+        :rtype: autobit.db.Release
+        """
         pass
 
     @abc.abstractmethod
     def download(self, release: Release) -> bytes:
+        """ Download the supplied release and return the downloaded torrent
+        as bytes if successful.
+
+        :param release: Release to download
+        :type release: autobit.db.Release
+        :return: Downloaded torrent file content
+        :rtype: bytes
+        """
         pass
 
     @abc.abstractmethod
@@ -63,6 +83,7 @@ class Tracker(object):
 
     def _fetch(self, url, headers=None, params=None, verify=True) -> bytes:
         try:
+            self.logger.info("Downloading torrent...")
             resp = requests.get(url, headers=headers, params=params, verify=verify)
         except Exception as err:
             self.logger.exception("Failed to fetch torrent")
