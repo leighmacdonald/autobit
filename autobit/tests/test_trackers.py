@@ -7,6 +7,7 @@ from __future__ import unicode_literals, absolute_import
 import unittest
 
 from autobit import db
+from autobit.db import Release
 from autobit.classification import MediaClass, MediaType
 from autobit.tracker import tl
 from autobit.tracker import totv
@@ -14,7 +15,6 @@ from autobit.tracker import ptp
 from autobit.tracker import btn
 from autobit.tracker import ptn
 from autobit.tracker import scc
-from db import Release
 
 
 class TrackerTest(unittest.TestCase):
@@ -47,6 +47,11 @@ class TrackerTest(unittest.TestCase):
             ],
             'ptp': [
                 [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, MediaClass.MOVIE_HD, 'ptp'), True]
+            ],
+
+            'scc': [
+                [Release("MasterChef.Australia.S07E29.PDTV.x264-FQM", 1134473,
+                         MediaType.EPISODE, MediaClass.TV_SD, 'scc'), True]
             ]
         }
         db.make_engine()
@@ -59,6 +64,8 @@ class TrackerTest(unittest.TestCase):
                     self.assertTrue(torrent_file.startswith(b"d8:announce"))
             except KeyError:
                 pass
+            except Exception as err:
+                self.fail(err)
 
 
 if __name__ == '__main__':

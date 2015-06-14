@@ -33,8 +33,7 @@ PTN_PASS = ""
 
 SCC_ENABLE_UPLOAD = False
 SCC_ENABLE_DOWNLOAD = False
-SCC_USER = ""
-SCC_PASS = ""
+SCC_PASSKEY = ""
 
 TL_SOURCE_NICK = "_AnnounceBot_".lower()
 TL_SOURCE_CHAN = "#tlannounces".lower()
