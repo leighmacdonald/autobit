@@ -30,7 +30,9 @@ class TrackerTest(unittest.TestCase):
         self.irc_inputs = {
             'tl': ["New Torrent Announcement: <Movies :: HD>  Name:'Angles of Darkness 2015 "
                    "480p WEBRiP SViD AC3-LEGi0N' uploaded by 'GiGGLES' -  "
-                   "http://www.torrentleech.org/torrent/615195"]
+                   "http://www.torrentleech.org/torrent/615195"],
+            'totv': [
+                "[ Olympus - S01E10 -  Heritage ] [MP4 / x264 / HDTV / 480p / P2P] [ Olympus.S01E10.480p.HDTV.x264-mSD ] [ Syfy ] [ By: anonymous ] [ https://titansof.tv/api/torrents/17862/download ]"]
         }
         self.downloads = {
             'tl': [
@@ -59,6 +61,18 @@ class TrackerTest(unittest.TestCase):
             ]
         }
         db.make_engine()
+
+    def test_parse_line(self):
+        for key, tracker in self.trackers.items():
+            try:
+                for input_message in self.irc_inputs[key]:
+                    release = tracker.parse_line(input_message)
+                    self.assertTrue(release.torrent_id > 0)
+            except KeyError:
+                pass
+            except Exception as err:
+                self.fail(err)
+
 
     def test_download(self):
         for key, tracker in self.trackers.items():

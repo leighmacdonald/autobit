@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-
+A module for TOTV providing full support for all the tracker functionality that autobit
+supports.
 """
 from __future__ import unicode_literals, absolute_import
 import requests
 from autobit import config
-from autobit.classification import MediaType
+from autobit.classification import MediaType, MediaClass
 from autobit.db import Release
 from autobit.tracker import Tracker
 
 
 class TitansOfTV(Tracker):
+    name = "totv"
     announce_url = 'http://tracker.titansof.tv:34000/{}/announce'
     upload_endpoint = 'http://titansof.tv/api/torrents/upload'
 
@@ -33,13 +35,13 @@ class TitansOfTV(Tracker):
             'anonymous': 1,
             'scene_numbering': 1
         }
-        requests.post(self.upload_endpoint, payload)
+        return requests.post(self.upload_endpoint, payload).ok
 
     def parse_media_type(self, media_class: str) -> int:
         return MediaType.EPISODE
 
-    def parse_release_name(self, media_class: int, release_name: str) -> Release:
-        pass
-
     def parse_line(self, message: str) -> Release:
-        pass
+        p = message.replace(" ", "")[1:-1].split("][")
+        release_name = p[2]
+        torrent_id = p[5].split("/")[5]
+        return Release(release_name, torrent_id, MediaType.EPISODE, MediaClass.TV_HD, self.name)
