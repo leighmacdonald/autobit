@@ -52,6 +52,10 @@ class TrackerTest(unittest.TestCase):
             'scc': [
                 [Release("MasterChef.Australia.S07E29.PDTV.x264-FQM", 1134473,
                          MediaType.EPISODE, MediaClass.TV_SD, 'scc'), True]
+            ],
+            'ptn': [
+                [Release("Hannie.Caulder.1971.1080p.BluRay.x264-aAF", 91308,
+                         MediaType.MOVIE, MediaClass.MOVIE_HD, "ptn"), True]
             ]
         }
         db.make_engine()

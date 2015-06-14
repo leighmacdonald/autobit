@@ -61,9 +61,9 @@ class Tracker(object):
         return self._source_chan.lower() == channel.lower() and \
                self._source_nick.lower() == nick.lower()
 
-    def _fetch(self, url, headers=None, params=None) -> bytes:
+    def _fetch(self, url, headers=None, params=None, verify=True) -> bytes:
         try:
-            resp = requests.get(url, headers=headers, params=params)
+            resp = requests.get(url, headers=headers, params=params, verify=verify)
         except Exception as err:
             self.logger.exception("Failed to fetch torrent")
             return False
