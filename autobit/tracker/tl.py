@@ -23,8 +23,8 @@ class TorrentLeech(Tracker):
     rx = re.compile(r"^New.+?<(?P<cat>.+?)>\s+Name:'(?P<name>.+?)'.+?/torrent/(?P<id>\d+)$")
 
     def __init__(self):
-        super().__init__()
         self._apikey = None
+        super().__init__()
 
     def parse_line(self, message: str) -> Release:
         m = self.rx.match(message)
@@ -59,6 +59,8 @@ class TorrentLeech(Tracker):
     def download(self, release: Release) -> bytes:
         url = "http://www.torrentleech.org/rss/download/{}/{}/{}.torrent".format(
             release.torrent_id, self._apikey, release.name_orig.replace(" ", "."))
+        torrent_data = self._fetch(url)
+        return torrent_data
 
     def reconfigure(self):
         self._source_chan = config['TL_SOURCE_CHAN'].lower()
