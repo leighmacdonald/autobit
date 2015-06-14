@@ -21,21 +21,13 @@ from autobit.classification import MediaClass
 
 
 class PassThePopcorn(Tracker):
-
     name = "ptp"
-    source_nick = "Hummingbird".lower()
-    source_chan = "#ptp-announce-ssl".lower()
-    _passkey = ""
-    _authkey = ""
-
     rx = re.compile(r"^(?P<name>.+?)\s-\shttps://.+?torrentid=(?P<id>\d+)")
 
     def __init__(self):
+        self._passkey = ""
+        self._authkey = ""
         super().__init__()
-        self.reconfigure()
-        self._www_session = requests.Session()
-        self._logged_in = False
-        self._enabled = False
 
     def reconfigure(self):
         self._passkey = config['PTP_PASSKEY']
@@ -59,24 +51,18 @@ class PassThePopcorn(Tracker):
             return MediaClass.MOVIE_SD
         return MediaClass.UNSUPPORTED
 
-    def verify_source(self, channel: str, nick: str) -> bool:
-        return self.source_chan == channel.lower() and self.source_nick == nick.lower()
-
     def _login(self) -> bool:
         pass
 
     def _make_torrent_url(self, torrent_id):
-        return "http://passthepopcorn.me/torrents.php?action=download&torrent_pass={}&id={}&authkey={}".format(
-            self._passkey, torrent_id, config['PTP_AUTHKEY']
-        )
+        return
 
     def upload(self, release_name, torrent_file) -> bool:
         pass
 
     def download(self, release: Release) -> bytes:
-        if not self._logged_in and not self.login():
-            return None
-        r = self._www_session.get(self._make_torrent_url(release.torrent_id))
-        if r.ok:
-            return r.content
-        return False
+        url = "http://passthepopcorn.me/torrents.php?action=download&torrent_pass={}&id={}&authkey={}".format(
+            self._passkey, release.torrent_id, self._authkey
+        )
+        torrent_file = self._fetch(url)
+        return torrent_file

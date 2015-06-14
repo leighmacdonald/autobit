@@ -36,6 +36,17 @@ class TrackerTest(unittest.TestCase):
             'tl': [
                 [Release("Angles of Darkness 2015 480p WEBRiP SViD AC3-LEGi0N", 615195,
                          MediaType.MOVIE, MediaClass.MOVIE_SD, 'tl'), True]
+            ],
+            'totv': [
+                [Release("Orange.Is.the.New.Black.S03E12.PROPER.720p.WEBRip.x264-2HD", 17856,
+                         MediaType.EPISODE, MediaClass.TV_HD, 'totv'), True]
+            ],
+            'btn': [
+                [Release("StarTalk.S01E07.Chris.Hadfield.REAL.HDTV.x264-SQUEAK", 514266,
+                         MediaType.EPISODE, MediaClass.TV_HD, 'btn'), True]
+            ],
+            'ptp': [
+                [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, MediaClass.MOVIE_HD, 'ptp'), True]
             ]
         }
         db.make_engine()
@@ -44,7 +55,8 @@ class TrackerTest(unittest.TestCase):
         for key, tracker in self.trackers.items():
             try:
                 for release, expected in self.downloads[key]:
-                    self.assertTrue(tracker.download(release))
+                    torrent_file = tracker.download(release)
+                    self.assertTrue(torrent_file.startswith(b"d8:announce"))
             except KeyError:
                 pass
 
