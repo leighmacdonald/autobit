@@ -21,7 +21,11 @@ class TitansOfTV(Tracker):
         super().__init__()
 
     def reconfigure(self):
-        self._apikey = config["TOTV_APIKEY"]
+        self._apikey = config.get("TOTV_APIKEY", "")
+        if self._apikey and len(self._apikey) == 40:
+            self.enable()
+        else:
+            self.disable()
 
     def download(self, release: Release) -> bytes:
         url = "https://titansof.tv/api/torrents/{}/download".format(release.torrent_id)

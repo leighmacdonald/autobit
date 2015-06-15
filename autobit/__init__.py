@@ -11,6 +11,14 @@ import os
 logger = logging.getLogger(__name__)
 
 
+class AutoBitError(Exception):
+    pass
+
+
+class TrackerError(AutoBitError):
+    pass
+
+
 def load_config():
     cfg = Config(dirname(dirname(__file__)))
     cfg.from_object("autobit.settings")
@@ -41,9 +49,9 @@ else:
         This is the ZNC module that will parse incoming IRC messages
         """
         description = "Bittorrent IRC Auto Downloader"
-        module_types = [znc.CModInfo.NetworkModule, znc.CModInfo.UserModule]
+        module_types = [znc.CModInfo.GlobalModule, znc.CModInfo.NetworkModule, znc.CModInfo.UserModule]
         args = []
-        parser = None
+        tracker = None
         active = False
         cmd_prefix = "\\"
 
@@ -52,8 +60,8 @@ else:
 
         def OnChanMsg(self, nick, channel, message):
             self.debug("OnChanMsg: {}".format(message.s))
-            if self.active and self.parser.verify_source(channel.GetName(), nick.GetNick()):
-                parsed_line = irc.process_line(self.parser, message.s)
+            if self.active and self.tracker.verify_source(channel.GetName(), nick.GetNick()):
+                parsed_line = self.tracker.parse_line(message.s)
                 if not parsed_line:
                     return znc.CONTINUE
                 self.module_msg(parsed_line)
@@ -62,13 +70,15 @@ else:
             return znc.CONTINUE
 
         def OnLoad(self, sArgs, sMessage):
+            self.module_msg("Loading..")
             if sArgs == "tl":
-                from autobit.service.tl import TLParser
-                self.parser = TLParser()
-            if self.parser:
+                from autobit.tracker.tl import TorrentLeech
+
+                self.tracker = TorrentLeech()
+            if self.tracker:
                 self.active = True
                 self.module_msg("> Loaded autobit successfully for {}".format(sArgs))
-            return self.parser
+            return self.tracker
 
         def module_msg(self, message):
             self.PutModule("{}".format(message))

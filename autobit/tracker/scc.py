@@ -29,6 +29,10 @@ class SceneAccess(Tracker):
 
     def reconfigure(self):
         self._passkey = config["SCC_PASSKEY"]
+        if self._passkey and len(self._passkey) == 32:
+            self.enable()
+        else:
+            self.disable()
 
     def upload(self, release_name, torrent_file) -> bool:
         raise NotImplementedError()

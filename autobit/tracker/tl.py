@@ -66,6 +66,10 @@ class TorrentLeech(Tracker):
         self._source_chan = config['TL_SOURCE_CHAN'].lower()
         self._source_nick = config['TL_SOURCE_NICK'].lower()
         self._apikey = config['TL_APIKEY']
+        if self._apikey and len(self._apikey) == 20:
+            self.enable()
+        else:
+            self.disable()
 
     def upload(self, release_name, torrent_file) -> bool:
         raise NotImplementedError()

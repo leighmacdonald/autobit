@@ -22,6 +22,7 @@ class Tracker(object):
         self.logger = logging.getLogger("tracker.{}".format(self.name))
         self._source_chan = None
         self._source_nick = None
+        self.enabled = False
         self.reconfigure()
 
     @abc.abstractmethod
@@ -90,3 +91,13 @@ class Tracker(object):
             return False
         else:
             return resp.content
+
+    def enable(self):
+        if not self.enabled:
+            self.logger.info("{} tracker enabled".format(self.__class__.__name__))
+        self.enabled = True
+
+    def disable(self):
+        if self.enabled:
+            self.logger.info("{} tracker disabled".format(self.__class__.__name__))
+        self.enabled = False

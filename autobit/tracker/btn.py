@@ -21,12 +21,15 @@ class BroadcastTheNet(Tracker):
         url = "https://broadcasthe.net/torrents.php?action=download&id={}&authkey={}&torrent_pass={}".format(
             release.torrent_id, self._authkey, self._passkey
         )
-        torrent_file = self._fetch(url)
-        return torrent_file
+        return self._fetch(url)
 
     def reconfigure(self):
         self._authkey = config['BTN_AUTHKEY']
         self._passkey = config['BTN_PASSKEY']
+        if all([self._authkey, self._passkey, len(self._authkey) == 32, len(self._passkey) == 32]):
+            self.enable()
+        else:
+            self.disable()
 
     def upload(self, release_name, torrent_file) -> bool:
         raise NotImplementedError()

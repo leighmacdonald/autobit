@@ -73,7 +73,6 @@ class TrackerTest(unittest.TestCase):
             except Exception as err:
                 self.fail(err)
 
-
     def test_download(self):
         for key, tracker in self.trackers.items():
             try:

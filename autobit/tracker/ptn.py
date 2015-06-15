@@ -20,11 +20,14 @@ class PirateTheNet(Tracker):
         url = "https://piratethenet.org/download.php?torrent={}&passkey={}".format(
             release.torrent_id, self._passkey
         )
-        torrent_file = self._fetch(url, verify=False)
-        return torrent_file
+        return self._fetch(url, verify=False)
 
     def reconfigure(self):
-        self._passkey = config['PTN_PASSKEY']
+        self._passkey = config.get('PTN_PASSKEY', "")
+        if self._passkey and len(self._passkey) == 32:
+            self.enable()
+        else:
+            self.disable()
 
     def upload(self, release_name, torrent_file) -> bool:
         raise NotImplementedError()

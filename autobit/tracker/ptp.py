@@ -21,7 +21,11 @@ class PassThePopcorn(Tracker):
 
     def reconfigure(self):
         self._passkey = config['PTP_PASSKEY']
-        self._authkey = config['PTP_AUTHKEY']
+        self._authkey = int(config.get('PTP_AUTHKEY', 0))
+        if self._passkey and self._authkey and len(self._passkey) == 32 and self._authkey > 0:
+            self.enable()
+        else:
+            self.disable()
 
     def parse_line(self, message: str) -> Release:
         m = self.rx.match(message)
