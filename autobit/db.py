@@ -3,7 +3,6 @@ from contextlib import contextmanager
 from datetime import datetime
 import logging
 from os import getenv
-import guessit
 from sqlalchemy import create_engine, Column, Integer, Unicode, DateTime, Binary
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError, DBAPIError

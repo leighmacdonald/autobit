@@ -19,6 +19,10 @@ class TrackerError(AutoBitError):
     pass
 
 
+class ConfigError(AutoBitError):
+    pass
+
+
 def load_config():
     cfg = Config(dirname(dirname(__file__)))
     cfg.from_object("autobit.settings")

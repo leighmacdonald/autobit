@@ -3,9 +3,7 @@
 
 """
 from __future__ import unicode_literals, absolute_import
-
 import unittest
-
 from autobit import db
 from autobit.db import Release
 from autobit.classification import MediaClass, MediaType
@@ -32,7 +30,19 @@ class TrackerTest(unittest.TestCase):
                    "480p WEBRiP SViD AC3-LEGi0N' uploaded by 'GiGGLES' -  "
                    "http://www.torrentleech.org/torrent/615195"],
             'totv': [
-                "[ Olympus - S01E10 -  Heritage ] [MP4 / x264 / HDTV / 480p / P2P] [ Olympus.S01E10.480p.HDTV.x264-mSD ] [ Syfy ] [ By: anonymous ] [ https://titansof.tv/api/torrents/17862/download ]"]
+                "[ Olympus - S01E10 -  Heritage ] [MP4 / x264 / HDTV / 480p / P2P] "
+                "[ Olympus.S01E10.480p.HDTV.x264-mSD ] [ Syfy ] [ By: anonymous ] "
+                "[ https://titansof.tv/api/torrents/17862/download ]"],
+            'scc': [
+                "NEW in TV/HD-x264: -> Republic.Of.Doyle.S01E02.720p.HDTV.x264-aAF "
+                "(Uploaded 2 minutes and 6 seconds after pre) - (1.13 GB) - "
+                "(https://sceneaccess.eu/details.php?id=1132683)"
+            ],
+            'btn': [
+                "Game of Thrones | S05E08 | Episode | 2015 | MKV | h.264 | WEB-DL | 720p "
+                "| No | Yes | 520543 | CloeJade | English "
+                "| Game.of.Thrones.S05E08.Hardhome.720p.WEB-DL.DD5.1.H.264-NTb"
+            ]
         }
         self.downloads = {
             'tl': [
