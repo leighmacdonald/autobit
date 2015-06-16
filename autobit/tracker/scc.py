@@ -3,10 +3,21 @@
 
 """
 from __future__ import unicode_literals, absolute_import
+import re
 from autobit import config
 from autobit.tracker import Tracker
 from autobit.db import Release
+from classification import MediaType, MediaClass
 
+section_map = {
+    "TV/SD-X264": [MediaType.EPISODE],
+    "TV/HD-X264": [MediaType.EPISODE],
+    "Foreign/TV/x264": [MediaType.EPISODE],
+    "Movies/x264": [MediaType.MOVIE],
+    "Movies/XviD": [MediaType.MOVIE],
+    "Foreign/Movies/XviD": [MediaType.MOVIE],
+    "Foreign/Movies/x264": [MediaType.MOVIE]
+}
 
 class SceneAccess(Tracker):
     """
@@ -15,11 +26,19 @@ class SceneAccess(Tracker):
     """
 
     def __init__(self):
+        self._rx = re.compile(r".+?in\s+(?P<section>.+?):.+>\s+(?P<rls>.+?)\s+.+=(?P<id>\d+)\)$")
         self._passkey = ""
+        self.name = "scc"
         super().__init__()
 
     def parse_line(self, message: str) -> Release:
-        raise NotImplementedError()
+        match = self._rx.match(message)
+        if match:
+            g = match.groupdict()
+            torrent_id = g['id']
+            release_name = g['rls']
+            section = g['section']
+            return Release(release_name, torrent_id, MediaType.EPISODE, MediaClass.MOVIE_HD, self.name)
 
     def download(self, release: Release) -> bytes:
         url = "https://sceneaccess.eu/download/{}/{}/{}.torrent".format(
