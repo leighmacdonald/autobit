@@ -7,6 +7,71 @@ from enum import IntEnum
 import guessit
 
 
+class Resolutions(IntEnum):
+    UNKNOWN = 0
+    SD = 1
+    P480 = 2
+    P576 = 3
+    P720 = 4
+    I1080 = 5
+    P1080 = 6
+    K4 = 7
+
+
+class Container(IntEnum):
+    UNKNOWN = 0
+    MP4 = 1
+    AVI = 2
+    MKV = 3
+    VOB = 4
+    MPEG = 5
+    ISO = 6
+    WMV = 7
+    TS = 8
+    M4V = 9
+    M2TS = 10
+
+
+class Codecs(IntEnum):
+    XVID = 10
+    X264 = 22
+    MPEG2 = 30
+    DIVX = 40
+    DVDR = 50
+    VC_1 = 60
+    H264 = 70
+    WMV = 80
+    BD = 90
+    X264_HI10P = 100
+
+
+class Sources(IntEnum):
+    UNKNOWN = 0
+    DSR = 1
+    DVDRIP = 2
+    TVRIP = 3
+    VHSRIP = 4
+    BLURAY = 5
+    BDRIP = 6
+    BRRIP = 7
+    DVD5 = 8
+    DVD9 = 9
+    HDDVD = 10
+    WEB_DL = 11
+    WEBRIP = 12
+    BD5 = 13
+    BD9 = 14
+    BD25 = 15
+
+
+class Origin(IntEnum):
+    UNKNOWN = 0
+    SCENE = 1
+    P2P = 2
+
+    # Special case for stopping spread of internal releases if wanted
+    P2P_INTERNAL = 3
+
 class Classification(object):
     """
     Provides classification info for a parsed release name
