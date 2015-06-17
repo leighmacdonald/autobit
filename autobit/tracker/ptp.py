@@ -20,8 +20,8 @@ class PassThePopcorn(Tracker):
         super().__init__()
 
     def reconfigure(self):
-        self._passkey = config['PTP_PASSKEY']
-        self._authkey = int(config.get('PTP_AUTHKEY', 0))
+        self._passkey = config.get('PTP_PASSKEY', "")
+        self._authkey = config.get('PTP_AUTHKEY', "")
         if self._passkey and self._authkey and len(self._passkey) == 32 and self._authkey > 0:
             self.enable()
         else:

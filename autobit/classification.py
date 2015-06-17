@@ -7,15 +7,32 @@ from enum import IntEnum
 import guessit
 
 
+class MediaType(IntEnum):
+    """
+    Defines the general type of media.
+    """
+    UNKNOWN = 0
+    EPISODE = 1
+    MOVIE = 2
+
+    @staticmethod
+    def parse(media_type):
+        if media_type == "episode":
+            return MediaType.EPISODE
+        elif media_type == "movie":
+            return MediaType.MOVIE
+        return MediaType.UNKNOWN
+
+
 class Resolutions(IntEnum):
     UNKNOWN = 0
-    SD = 1
-    P480 = 2
-    P576 = 3
-    P720 = 4
-    I1080 = 5
-    P1080 = 6
-    K4 = 7
+    SD = 10
+    P480 = 20
+    P576 = 30
+    P720 = 40
+    I1080 = 50
+    P1080 = 60
+    K4 = 70
 
 
 class Container(IntEnum):
@@ -33,8 +50,9 @@ class Container(IntEnum):
 
 
 class Codecs(IntEnum):
+    """ Codecs detected in release"""
     XVID = 10
-    X264 = 22
+    X264 = 20
     MPEG2 = 30
     DIVX = 40
     DVDR = 50
@@ -46,6 +64,7 @@ class Codecs(IntEnum):
 
 
 class Sources(IntEnum):
+    """ Media ripping sources """
     UNKNOWN = 0
     DSR = 1
     DVDRIP = 2
@@ -63,8 +82,13 @@ class Sources(IntEnum):
     BD9 = 14
     BD25 = 15
 
+SOURCES_RETAIL = [Sources.DVDRIP, Sources.BLURAY, Sources.BDRIP, Sources.BRRIP, Sources.DVD5,
+                  Sources.DVD9, Sources.HDDVD, Sources.BD5, Sources.BD9, Sources.BD25]
 
 class Origin(IntEnum):
+    """
+    Defines the origin of the release.
+    """
     UNKNOWN = 0
     SCENE = 1
     P2P = 2
@@ -111,8 +135,8 @@ class Classification(object):
 
         :param attrs:
         :type attrs:
-        :return:
-        :rtype:
+        :return: Parsed classification data
+        :rtype: Classification
         """
         c = cls()
         attr_list = [
@@ -157,18 +181,6 @@ class MediaClass(IntEnum):
 TV_CLASSES = [MediaClass.TV_SD, MediaClass.TV_HD]
 MOVIE_CLASSES = [MediaClass.MOVIE_HD, MediaClass.MOVIE_SD]
 
-class MediaType(IntEnum):
-    UNKNOWN = 0
-    EPISODE = 1
-    MOVIE = 2
-
-    @staticmethod
-    def parse(media_type):
-        if media_type == "episode":
-            return MediaType.EPISODE
-        elif media_type == "movie":
-            return MediaType.MOVIE
-        return MediaType.UNKNOWN
 
 
 def classify(release_name, section_hint=None):

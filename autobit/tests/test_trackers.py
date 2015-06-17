@@ -85,6 +85,8 @@ class TrackerTest(unittest.TestCase):
 
     def test_download(self):
         for key, tracker in self.trackers.items():
+            if not tracker.enabled:
+                continue
             try:
                 for release, expected in self.downloads[key]:
                     torrent_file = tracker.download(release)

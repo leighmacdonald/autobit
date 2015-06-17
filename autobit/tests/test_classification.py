@@ -6,6 +6,7 @@ from __future__ import unicode_literals, absolute_import
 import unittest
 from autobit import classification
 
+
 class TestClassification(unittest.TestCase):
     def validate_obj(self, obj, d):
         if hasattr(d, 'items'):

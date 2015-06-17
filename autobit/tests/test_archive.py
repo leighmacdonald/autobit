@@ -19,8 +19,11 @@ class TestArchive(unittest.TestCase):
         self.temp_dir = tempfile.mkdtemp(prefix="autobit")
         self.rls_a_path = join(self.temp_dir, self.rls_a)
         self.rls_b_path = join(self.temp_dir, self.rls_b)
-        makedirs(self.rls_a_path)
-        makedirs(self.rls_b_path)
+        for path in [self.rls_a_path, self.rls_b_path]:
+            try:
+                makedirs(path)
+            except FileExistsError:
+                pass
 
     def tearDown(self):
         if exists(self.temp_dir):
