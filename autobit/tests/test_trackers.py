@@ -47,27 +47,27 @@ class TrackerTest(unittest.TestCase):
         self.downloads = {
             'tl': [
                 [Release("Angles of Darkness 2015 480p WEBRiP SViD AC3-LEGi0N", 615195,
-                         MediaType.MOVIE, 'tl'), True]
+                         MediaType.MOVIE, self.trackers['tl']), True]
             ],
             'totv': [
                 [Release("Orange.Is.the.New.Black.S03E12.PROPER.720p.WEBRip.x264-2HD", 17856,
-                         MediaType.TV, 'totv'), True]
+                         MediaType.TV, self.trackers['totv']), True]
             ],
             'btn': [
                 [Release("StarTalk.S01E07.Chris.Hadfield.REAL.HDTV.x264-SQUEAK", 514266,
-                         MediaType.TV, 'btn'), True]
+                         MediaType.TV, self.trackers['btn']), True]
             ],
             'ptp': [
-                [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, 'ptp'), True]
+                [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, self.trackers['ptp']), True]
             ],
 
             'scc': [
                 [Release("MasterChef.Australia.S07E29.PDTV.x264-FQM", 1134473,
-                         MediaType.TV, 'scc'), True]
+                         MediaType.TV, self.trackers['scc']), True]
             ],
             'ptn': [
                 [Release("Hannie.Caulder.1971.1080p.BluRay.x264-aAF", 91308,
-                         MediaType.MOVIE, "ptn"), True]
+                         MediaType.MOVIE, self.trackers['ptn']), True]
             ]
         }
         db.make_engine()
