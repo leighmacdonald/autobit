@@ -6,7 +6,7 @@ from __future__ import unicode_literals, absolute_import
 import unittest
 from autobit import db
 from autobit.db import Release
-from autobit.classification import MediaClass, MediaType
+from autobit.classification import MediaType
 from autobit.tracker import tl
 from autobit.tracker import totv
 from autobit.tracker import ptp
@@ -47,27 +47,27 @@ class TrackerTest(unittest.TestCase):
         self.downloads = {
             'tl': [
                 [Release("Angles of Darkness 2015 480p WEBRiP SViD AC3-LEGi0N", 615195,
-                         MediaType.MOVIE, MediaClass.MOVIE_SD, 'tl'), True]
+                         MediaType.MOVIE, 'tl'), True]
             ],
             'totv': [
                 [Release("Orange.Is.the.New.Black.S03E12.PROPER.720p.WEBRip.x264-2HD", 17856,
-                         MediaType.EPISODE, MediaClass.TV_HD, 'totv'), True]
+                         MediaType.TV, 'totv'), True]
             ],
             'btn': [
                 [Release("StarTalk.S01E07.Chris.Hadfield.REAL.HDTV.x264-SQUEAK", 514266,
-                         MediaType.EPISODE, MediaClass.TV_HD, 'btn'), True]
+                         MediaType.TV, 'btn'), True]
             ],
             'ptp': [
-                [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, MediaClass.MOVIE_HD, 'ptp'), True]
+                [Release("We Are Still Here 2015", 364285, MediaType.MOVIE, 'ptp'), True]
             ],
 
             'scc': [
                 [Release("MasterChef.Australia.S07E29.PDTV.x264-FQM", 1134473,
-                         MediaType.EPISODE, MediaClass.TV_SD, 'scc'), True]
+                         MediaType.TV, 'scc'), True]
             ],
             'ptn': [
                 [Release("Hannie.Caulder.1971.1080p.BluRay.x264-aAF", 91308,
-                         MediaType.MOVIE, MediaClass.MOVIE_HD, "ptn"), True]
+                         MediaType.MOVIE, "ptn"), True]
             ]
         }
         db.make_engine()

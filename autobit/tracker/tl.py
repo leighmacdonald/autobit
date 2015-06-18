@@ -8,10 +8,8 @@ from __future__ import unicode_literals, absolute_import
 import logging
 import re
 from autobit import config
-from autobit.classification import MediaClass
 from autobit.tracker import Tracker
-from autobit.db import Release
-from classification import MediaType, TV_CLASSES
+from autobit.classification import MediaType
 
 logger = logging.getLogger()
 
@@ -26,37 +24,26 @@ class TorrentLeech(Tracker):
         self._apikey = None
         super().__init__()
 
-    def parse_line(self, message: str) -> Release:
+    def parse_line(self, message: str):
         m = self.rx.match(message)
         if m:
             g = m.groupdict()
-            media_class = self.parse_media_type(g['cat'])
-            if media_class == MediaClass.UNSUPPORTED:
-                return None
             torrent_id = g.get('id', None)
             if not torrent_id:
                 logging.warning("No torrent id found")
                 return None
-            media_type = self._get_media_type(media_class)
-            return Release(g['name'], torrent_id, media_type, media_class, self.name)
+            media_type = self._parse_media_type(g['cat'])
+            return self.make_release(g['name'], torrent_id, media_type)
         return None
 
-    def _get_media_type(self, media_class):
-        if media_class in [MediaClass.MOVIE_HD, MediaClass.MOVIE_SD]:
-            return MediaType.MOVIE
-        elif media_class in TV_CLASSES:
-            return MediaType.EPISODE
-        else:
-            return MediaType.UNKNOWN
-
-    def parse_media_type(self, media_class):
+    def _parse_media_type(self, media_class):
         if media_class == "Movies :: HD":
-            return MediaClass.MOVIE_HD
+            return MediaType.MOVIE
         elif media_class == "Movies :: SD":
-            return MediaClass.MOVIE_SD
-        return MediaClass.UNSUPPORTED
+            return MediaType.MOVIE
+        return MediaType.UNSUPPORTED
 
-    def download(self, release: Release) -> bytes:
+    def download(self, release) -> bytes:
         url = "http://www.torrentleech.org/rss/download/{}/{}/{}.torrent".format(
             release.torrent_id, self._apikey, release.name_orig.replace(" ", "."))
         torrent_data = self._fetch(url)

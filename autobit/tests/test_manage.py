@@ -9,7 +9,7 @@ from os.path import join, exists
 from autobit import manage, config
 from autobit.db import Release
 from autobit.tracker import totv
-from autobit.classification import MediaType, MediaClass
+from autobit.classification import MediaType
 
 
 class TestManage(unittest.TestCase):
@@ -27,8 +27,8 @@ class TestManage(unittest.TestCase):
     def test_process_release(self):
         tkr = totv.TitansOfTV()
         release = Release("Orange.Is.the.New.Black.S03E12.PROPER.720p.WEBRip.x264-2HD", 17856,
-                          MediaType.EPISODE, MediaClass.TV_HD, 'totv')
-        manage.process_release(tkr, release)
+                          MediaType.TV, tkr)
+        manage.process_release(release)
 
 
 if __name__ == '__main__':

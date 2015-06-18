@@ -5,7 +5,6 @@
 from __future__ import unicode_literals, absolute_import
 from autobit import config
 from autobit.tracker import Tracker
-from autobit.db import Release
 
 
 class PirateTheNet(Tracker):
@@ -13,10 +12,10 @@ class PirateTheNet(Tracker):
         self._passkey = ""
         super().__init__()
 
-    def parse_line(self, message: str) -> Release:
+    def parse_line(self, message: str):
         raise NotImplementedError()
 
-    def download(self, release: Release) -> bytes:
+    def download(self, release) -> bytes:
         url = "https://piratethenet.org/download.php?torrent={}&passkey={}".format(
             release.torrent_id, self._passkey
         )

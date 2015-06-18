@@ -6,8 +6,7 @@ supports.
 from __future__ import unicode_literals, absolute_import
 import requests
 from autobit import config
-from autobit.classification import MediaType, MediaClass
-from autobit.db import Release
+from autobit.classification import MediaType
 from autobit.tracker import Tracker
 
 
@@ -27,7 +26,7 @@ class TitansOfTV(Tracker):
         else:
             self.disable()
 
-    def download(self, release: Release) -> bytes:
+    def download(self, release) -> bytes:
         url = "https://titansof.tv/api/torrents/{}/download".format(release.torrent_id)
         torrent_file = self._fetch(url, params={"apikey": self._apikey})
         return torrent_file
@@ -42,10 +41,10 @@ class TitansOfTV(Tracker):
         return requests.post(self.upload_endpoint, payload).ok
 
     def parse_media_type(self, media_class: str) -> int:
-        return MediaType.EPISODE
+        return MediaType.TV
 
-    def parse_line(self, message: str) -> Release:
+    def parse_line(self, message: str):
         p = message.replace(" ", "")[1:-1].split("][")
         release_name = p[2]
         torrent_id = p[5].split("/")[5]
-        return Release(release_name, torrent_id, MediaType.EPISODE, MediaClass.TV_HD, self.name)
+        return self.make_release(release_name, torrent_id, MediaType.TV)

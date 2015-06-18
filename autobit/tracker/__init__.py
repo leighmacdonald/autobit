@@ -101,3 +101,6 @@ class Tracker(object):
         if self.enabled:
             self.logger.info("{} tracker disabled".format(self.__class__.__name__))
         self.enabled = False
+
+    def make_release(self, name, torrent_id, media_type):
+        return Release(name, torrent_id, media_type, self)

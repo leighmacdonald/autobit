@@ -9,6 +9,6 @@ setup(
     description='ZNC/IRC Based torrent auto downloader and uploader',
     author='Leigh MacDonald',
     url="https://github.com/leighmacdonald/autobit",
-    author_email='leigh@cudd.li',
+    author_email='leigh.macdonald@gmail.com',
     packages=['autobit', 'autobit.tracker'],
 )

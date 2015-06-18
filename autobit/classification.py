@@ -3,7 +3,7 @@
 
 """
 from __future__ import unicode_literals, absolute_import
-from enum import IntEnum
+from enum import IntEnum, Enum
 import guessit
 
 
@@ -12,19 +12,28 @@ class MediaType(IntEnum):
     Defines the general type of media.
     """
     UNKNOWN = 0
-    EPISODE = 1
+    TV = 1
     MOVIE = 2
 
     @staticmethod
     def parse(media_type):
-        if media_type == "episode":
-            return MediaType.EPISODE
+        if media_type in ["episode", "tv"]:
+            return MediaType.TV
         elif media_type == "movie":
             return MediaType.MOVIE
         return MediaType.UNKNOWN
 
 
-class Resolutions(IntEnum):
+class ClassEnum(Enum):
+    @classmethod
+    def parse(cls, codec_name):
+        try:
+            return cls[codec_name.upper()]
+        except KeyError:
+            return cls.UNKNOWN
+
+
+class Resolutions(ClassEnum):
     UNKNOWN = 0
     SD = 10
     P480 = 20
@@ -35,7 +44,7 @@ class Resolutions(IntEnum):
     K4 = 70
 
 
-class Container(IntEnum):
+class Container(ClassEnum):
     UNKNOWN = 0
     MP4 = 1
     AVI = 2
@@ -49,8 +58,9 @@ class Container(IntEnum):
     M2TS = 10
 
 
-class Codecs(IntEnum):
+class Codecs(ClassEnum):
     """ Codecs detected in release"""
+    UNKNOWN = 0
     XVID = 10
     X264 = 20
     MPEG2 = 30
@@ -63,7 +73,7 @@ class Codecs(IntEnum):
     X264_HI10P = 100
 
 
-class Sources(IntEnum):
+class Sources(ClassEnum):
     """ Media ripping sources """
     UNKNOWN = 0
     DSR = 1
@@ -85,7 +95,8 @@ class Sources(IntEnum):
 SOURCES_RETAIL = [Sources.DVDRIP, Sources.BLURAY, Sources.BDRIP, Sources.BRRIP, Sources.DVD5,
                   Sources.DVD9, Sources.HDDVD, Sources.BD5, Sources.BD9, Sources.BD25]
 
-class Origin(IntEnum):
+
+class Origin(ClassEnum):
     """
     Defines the origin of the release.
     """
@@ -124,10 +135,11 @@ class Classification(object):
         :return: Generated release key
         :rtype: str
         """
+        name = ".".join(self.name.lower().split(" "))
         if self.type == MediaType.MOVIE:
-            return self._key_sep.join([self.name.lower(), self.resolution])
+            return self._key_sep.join([name, self.resolution])
         else:
-            return self._key_sep.join([self.name.lower(), self.season, self.episode, self.resolution])
+            return self._key_sep.join([name, self.season, self.episode, self.resolution])
 
     @classmethod
     def from_guessit(cls, attrs):
@@ -150,11 +162,18 @@ class Classification(object):
             ["year", "year"]
         ]
         for local_property, guessit_property in attr_list:
-            if guessit_property == "type":
-                value = MediaType.parse(attrs.get("type", None))
+            try:
+                if guessit_property == "type":
+                    value = MediaType.parse(attrs.get(guessit_property, None))
+                elif local_property == "codec_video":
+                    value = Codecs.parse(attrs.get(guessit_property, None))
+
+                else:
+                    value = attrs.get(guessit_property, None)
+            except ValueError:
+                continue
             else:
-                value = attrs.get(guessit_property, None)
-            setattr(c, local_property, value)
+                setattr(c, local_property, value)
 
         if c.type == MediaType.MOVIE:
             setattr(c, "name", attrs.get("title", None))
@@ -168,19 +187,6 @@ class Classification(object):
             raise ValueError("Incompatible match values")
 
         return c
-
-
-class MediaClass(IntEnum):
-    UNSUPPORTED = 0
-    TV_SD = 1
-    TV_HD = 2
-    MOVIE_SD = 3
-    MOVIE_HD = 4
-
-
-TV_CLASSES = [MediaClass.TV_SD, MediaClass.TV_HD]
-MOVIE_CLASSES = [MediaClass.MOVIE_HD, MediaClass.MOVIE_SD]
-
 
 
 def classify(release_name, section_hint=None):
@@ -199,6 +205,8 @@ def classify(release_name, section_hint=None):
             # Reject anything we cant be sure of to be safe
             if k not in attrs:
                 raise ValueError()
-        return Classification.from_guessit(attrs)
+        guess = Classification.from_guessit(attrs)
     except ValueError:
         return False
+    else:
+        return guess

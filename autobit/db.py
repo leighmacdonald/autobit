@@ -72,23 +72,22 @@ class Release(Base):
     name = Column(Unicode(length=128), nullable=False)
     name_orig = Column(Unicode(length=128), nullable=False)
     media_type = Column(Integer, nullable=False)
-    torrent_file = Column(Binary, nullable=False)
     torrent_id = Column(Integer, nullable=False)
     added_on = Column(DateTime, default=datetime.now())
 
-    def __init__(self, name, torrent_id, media_type, media_class, source, torrent_file=None):
+    def __init__(self, name, torrent_id, media_type, tracker):
         self.name_orig = name
         self.name = self.normalize(name)
         self.torrent_id = int(torrent_id)
         self.media_type = media_type
-        self.media_class = media_class
-        self.source = source
-        self.torrent_file = torrent_file
+        self.tracker = tracker
 
     @staticmethod
     def normalize(release_name: str) -> str:
         return ".".join(release_name.lower().split(" "))
 
+    def download(self) -> bytes:
+        return self.tracker.download(self)
 
 def add_release(session: Session, release: Release) -> bool:
     try:

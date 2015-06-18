@@ -12,13 +12,16 @@ Planned Features
 - [ ] IRC Notifications / Log messages
 - [x] ZNC Module (python3)
 - [ ] Remote adding of torrents over API
+- [ ] Classification system used to filter releases for validity
 
 Requirements
 ============
 
 - ZNC w/python3 module support compiled in. You must check, as there is a good chance
 this will not be there by default on your system.
-- Python 3.4+ (3.3 w/enum pkg)
+- Python 3.5
+- Python 3.4 (w/scandir pkg)
+- Python 3.3 (w/scandir+enum pkg)
 
 
 Configuration

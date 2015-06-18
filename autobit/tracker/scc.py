@@ -7,12 +7,12 @@ import re
 from autobit import config
 from autobit.tracker import Tracker
 from autobit.db import Release
-from classification import MediaType, MediaClass
+from autobit.classification import MediaType
 
 section_map = {
-    "TV/SD-X264": [MediaType.EPISODE],
-    "TV/HD-X264": [MediaType.EPISODE],
-    "Foreign/TV/x264": [MediaType.EPISODE],
+    "TV/SD-X264": [MediaType.TV],
+    "TV/HD-X264": [MediaType.TV],
+    "Foreign/TV/x264": [MediaType.TV],
     "Movies/x264": [MediaType.MOVIE],
     "Movies/XviD": [MediaType.MOVIE],
     "Foreign/Movies/XviD": [MediaType.MOVIE],
@@ -38,7 +38,7 @@ class SceneAccess(Tracker):
             torrent_id = g['id']
             release_name = g['rls']
             section = g['section']
-            return Release(release_name, torrent_id, MediaType.EPISODE, MediaClass.MOVIE_HD, self.name)
+            return self.make_release(release_name, torrent_id, MediaType.TV)
 
     def download(self, release: Release) -> bytes:
         url = "https://sceneaccess.eu/download/{}/{}/{}.torrent".format(

@@ -5,9 +5,8 @@
 from __future__ import unicode_literals, absolute_import
 import re
 from autobit import config
-from autobit.db import Release
 from autobit.tracker import Tracker
-from autobit.classification import MediaClass
+from autobit.classification import MediaType
 
 
 class PassThePopcorn(Tracker):
@@ -27,28 +26,18 @@ class PassThePopcorn(Tracker):
         else:
             self.disable()
 
-    def parse_line(self, message: str) -> Release:
+    def parse_line(self, message: str):
         m = self.rx.match(message)
         if m:
             g = m.groupdict()
-            media_type = self.parse_media_type(g['cat'])
-            if media_type == MediaClass.UNSUPPORTED:
-                return None
-            release = Release(g['name'], media_type, self.name)
+            release = self.make_release(g['name'], g['id'], MediaType.MOVIE)
             return release
         return None
-
-    def parse_media_type(self, media_class):
-        if media_class == "Movies :: HD":
-            return MediaClass.MOVIE_HD
-        elif media_class == "Movies :: SD":
-            return MediaClass.MOVIE_SD
-        return MediaClass.UNSUPPORTED
 
     def upload(self, release_name, torrent_file) -> bool:
         pass
 
-    def download(self, release: Release) -> bytes:
+    def download(self, release) -> bytes:
         url = "http://passthepopcorn.me/torrents.php?action=download&torrent_pass={}&id={}&authkey={}".format(
             self._passkey, release.torrent_id, self._authkey
         )
