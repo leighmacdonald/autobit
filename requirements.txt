@@ -2,3 +2,4 @@ guessit
 sqlalchemy
 flask
 rarfile
+scandir

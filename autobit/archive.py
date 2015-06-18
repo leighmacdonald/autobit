@@ -3,11 +3,22 @@
 
 """
 from __future__ import unicode_literals, absolute_import
-from subprocess import check_call, CalledProcessError
-from os.path import isfile, isdir, join
+import sys
 import logging
 import glob
+from subprocess import check_call, CalledProcessError
+from os.path import isfile, isdir, join, abspath
 import rarfile
+
+try:
+    # Built in for py 3.5+
+    from os import scandir
+except ImportError:
+    try:
+        from scandir import scandir
+    except ImportError:
+        print("Cannot find scandir, please use python 3.5+ or install the scandir package")
+        sys.exit(1)
 
 logger = logging.getLogger(__name__)
 
@@ -73,17 +84,35 @@ def find_piece_size(total_size):
         raise ValueError("Total size is unreasonably large")
 
 
-def extract_release(path):
+def find_rar(path):
+    """ This function is designed to find the most appropriate file to use when extracting and/or
+    processing releases. This is designed for use with torrent clients and their various "on complete"
+    functionality.
+
+    This function will always return the largest file found under a directory, or from the rar file
+    itself.
+
+    :param path: Path to search for releases
+    :type path:
+    :return:
+    :rtype:
+    """
     if isfile(path):
-        return path
+        return abspath(path)
     elif isdir(path):
         target = glob.glob(join(path, '*part01.rar'))
         if not target:
             target = glob.glob(join(path, '*part1.rar'))
             if not target:
                 target = glob.glob(join(path, '*.rar'))
+
         if not target:
+            for fp in scandir():
+                pass
             raise FileNotFoundError("Could not find suitable target to extract: {}".format(path))
+        else:
+            target = target.pop()
+        return target
     else:
         raise ValueError("Invalid path, unsupported file type")
 
@@ -109,3 +138,4 @@ def extract_rar(path, target_dir):
         raise FileNotFoundError("Rar file contains no files")
     else:
         rar.extract(largest, target_dir)
+        return join(target_dir, largest.filename)

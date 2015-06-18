@@ -3,17 +3,18 @@
 
 """
 from __future__ import unicode_literals, absolute_import
-from os import makedirs
+from os import makedirs, unlink
 import tempfile
 import shutil
 import unittest
 from os.path import exists, join
 from autobit import archive
-
+from autobit.tests import fixture_root
 
 class TestArchive(unittest.TestCase):
     rls_a = ""
     rls_b = ""
+    archive_root = join(fixture_root, "archives")
 
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp(prefix="autobit")
@@ -30,7 +31,16 @@ class TestArchive(unittest.TestCase):
             shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_extract_release(self):
-        found_file = archive.extract_release(self.rls_a_path)
+        paths = ["long_naming", "standard_naming", "uncompressed"]
+        for path in (join(self.archive_root, p) for p in paths):
+            found_file = archive.find_rar(path)
+            extracted_file = archive.extract_rar(found_file, self.temp_dir)
+            self.assertTrue(exists(extracted_file))
+            try:
+                unlink(extracted_file)
+            except OSError:
+                pass
+
 
 
 if __name__ == '__main__':
