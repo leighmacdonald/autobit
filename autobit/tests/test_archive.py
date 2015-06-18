@@ -8,6 +8,7 @@ import tempfile
 import shutil
 import unittest
 from os.path import exists, join
+import rarfile
 from autobit import archive
 from autobit.tests import fixture_root
 
@@ -34,12 +35,17 @@ class TestArchive(unittest.TestCase):
         paths = ["long_naming", "standard_naming", "uncompressed"]
         for path in (join(self.archive_root, p) for p in paths):
             found_file = archive.find_rar(path)
-            extracted_file = archive.extract_rar(found_file, self.temp_dir)
-            self.assertTrue(exists(extracted_file))
             try:
-                unlink(extracted_file)
-            except OSError:
-                pass
+                extracted_file = archive.extract_rar(found_file, self.temp_dir)
+            except rarfile.NotRarFile:
+                extracted_file = found_file
+                self.assertTrue(exists(extracted_file))
+            else:
+                self.assertTrue(exists(extracted_file))
+                try:
+                    unlink(extracted_file)
+                except OSError:
+                    pass
 
 
 

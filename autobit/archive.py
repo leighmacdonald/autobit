@@ -100,6 +100,7 @@ def find_rar(path):
     if isfile(path):
         return abspath(path)
     elif isdir(path):
+        # Find a rar to extract a valid release from
         target = glob.glob(join(path, '*part01.rar'))
         if not target:
             target = glob.glob(join(path, '*part1.rar'))
@@ -107,9 +108,17 @@ def find_rar(path):
                 target = glob.glob(join(path, '*.rar'))
 
         if not target:
-            for fp in scandir():
-                pass
-            raise FileNotFoundError("Could not find suitable target to extract: {}".format(path))
+            # Find the largest non-rar file locatied within the path
+            largest = None
+            for entry in scandir(path):
+                if entry.name.startswith('.'):
+                    continue
+                if entry.is_file():
+                    if largest is None or entry.stat().st_size > largest.stat().st_size:
+                        largest = entry
+            if not largest:
+                raise FileNotFoundError("Could not find suitable target to extract: {}".format(path))
+            target = largest.path
         else:
             target = target.pop()
         return target
