@@ -42,7 +42,13 @@ class TrackerTest(unittest.TestCase):
                 "Game of Thrones | S05E08 | Episode | 2015 | MKV | h.264 | WEB-DL | 720p "
                 "| No | Yes | 520543 | CloeJade | English "
                 "| Game.of.Thrones.S05E08.Hardhome.720p.WEB-DL.DD5.1.H.264-NTb"
-            ]
+            ],
+            'ptp': ["The Love Story Of Taozi [2014] - x264 / WEB / MKV / 1080p - "
+                    "https://tls.passthepopcorn.me/torrents.php?id=128450&torrentid=364308 / "
+                    "https://tls.passthepopcorn.me/torrents.php?action=download&id=364308 - romance"],
+            'ptn': ["New in 1080P: The.Gunman.2015.1080p.BluRay.x264-iNFAMOUS with"
+                    " 7.65 GB in 2F @ https://piratethenet.org/moviedetails.php?movieid=16277 "
+                    "https://piratethenet.org/details.php?id=91355"]
         }
         self.downloads = {
             'tl': [

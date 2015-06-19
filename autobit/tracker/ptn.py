@@ -3,17 +3,27 @@
 
 """
 from __future__ import unicode_literals, absolute_import
+import re
 from autobit import config
 from autobit.tracker import Tracker
+from autobit.classification import MediaType
 
 
 class PirateTheNet(Tracker):
+    name = "ptn"
+    rx = re.compile(r"^New in\s+(?P<section>.+?):\s(?P<name>.+?)\swith\s+\d+.+?\?id=(?P<id>\d+)$")
+
     def __init__(self):
         self._passkey = ""
         super().__init__()
 
     def parse_line(self, message: str):
-        raise NotImplementedError()
+        m = self.rx.match(message)
+        if m:
+            g = m.groupdict()
+            release = self.make_release(g['name'], g['id'], MediaType.MOVIE)
+            return release
+        return None
 
     def download(self, release) -> bytes:
         url = "https://piratethenet.org/download.php?torrent={}&passkey={}".format(
