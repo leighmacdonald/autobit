@@ -194,11 +194,17 @@ def classify(release_name, section_hint=None):
 
     :param release_name:
     :param section_hint:
+    :type section_hint: MediaType
     :return: Parsed classification data|bool
     :rtype: Classification
     """
-    if section_hint not in ["video", "movie", "episode", None, False, ""]:
+    if section_hint and not isinstance(section_hint, MediaType):
         raise ValueError("Invalid section hint type")
+    if section_hint:
+        if section_hint == MediaType.MOVIE:
+            section_hint = "movie"
+        elif section_hint == MediaType.TV:
+            section_hint = "episode"
     attrs = guessit.guess_file_info(release_name.lower(), options={'name_only': True}, type=section_hint)
     try:
         for k in ['releaseGroup', 'format', 'type']:
