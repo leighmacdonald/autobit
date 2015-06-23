@@ -13,6 +13,9 @@ Planned Features
 - [x] ZNC Module (python3)
 - [ ] Remote adding of torrents over API
 - [ ] Classification system used to filter releases for validity
+- [ ] Multiple torrent client load distribution (Use multiple clients simultaneously to allow more total active torrents)
+- [ ] Parse autodl-irssi configs for trackers we don't fully support (Downloads only)
+
 
 Requirements
 ============
