@@ -4,3 +4,4 @@ flask
 rarfile
 scandir
 sphinx
+xmltodict
